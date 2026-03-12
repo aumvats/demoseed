@@ -109,14 +109,16 @@ export function QResults() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.4 }}
-        className="flex-1 p-4 sm:p-6 min-h-0"
+        className="flex-1 p-4 sm:p-6 min-h-0 overflow-hidden"
       >
-        <DataGrid
-          rows={rows}
-          fields={fields}
-          isAnimating={false}
-          onCellEdit={handleCellEdit}
-        />
+        <div className="h-full">
+          <DataGrid
+            rows={rows}
+            fields={fields}
+            isAnimating={false}
+            onCellEdit={handleCellEdit}
+          />
+        </div>
       </motion.div>
     </div>
   );

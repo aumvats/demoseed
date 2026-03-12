@@ -54,7 +54,7 @@ export function QuestionnaireShell() {
   const progressWidth = `${(currentStep / TOTAL_STEPS) * 100}%`;
 
   return (
-    <div className="min-h-dvh flex flex-col relative">
+    <div className="h-dvh flex flex-col relative overflow-hidden">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-[2px] bg-ds-border/30 z-50">
         <motion.div
