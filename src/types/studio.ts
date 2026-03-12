@@ -1,17 +1,19 @@
 import type { GenerationConfig, GeneratedDataset } from "./engine";
 
-export type WizardStep = 1 | 2 | 3 | 4 | 5;
+export type WizardStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 export const STEP_LABELS: Record<WizardStep, string> = {
   1: "Template",
-  2: "Configure",
-  3: "Scenarios",
-  4: "Preview",
-  5: "Export",
+  2: "Locale",
+  3: "Records",
+  4: "Scenarios",
+  5: "Generating",
+  6: "Results",
 };
 
 export interface StudioState {
   currentStep: WizardStep;
+  direction: 1 | -1;
   config: Partial<GenerationConfig>;
   dataset: GeneratedDataset | null;
   isGenerating: boolean;

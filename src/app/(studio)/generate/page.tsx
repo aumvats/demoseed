@@ -1,12 +1,12 @@
 "use client";
 
 import { StudioProvider } from "@/contexts/StudioContext";
-import { StudioLayout } from "@/components/studio/StudioLayout";
+import { QuestionnaireShell } from "@/components/studio/QuestionnaireShell";
 
 export default function GeneratePage() {
   return (
     <StudioProvider>
-      <StudioLayout />
+      <QuestionnaireShell />
     </StudioProvider>
   );
 }

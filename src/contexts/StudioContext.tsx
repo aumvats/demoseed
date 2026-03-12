@@ -20,6 +20,7 @@ const DEFAULT_CONFIG: Partial<GenerationConfig> = {
 
 const DEFAULT_STATE: StudioState = {
   currentStep: 1,
+  direction: 1,
   config: DEFAULT_CONFIG,
   dataset: null,
   isGenerating: false,
@@ -30,7 +31,11 @@ const DEFAULT_STATE: StudioState = {
 function studioReducer(state: StudioState, action: StudioAction): StudioState {
   switch (action.type) {
     case "SET_STEP":
-      return { ...state, currentStep: action.step };
+      return {
+        ...state,
+        currentStep: action.step,
+        direction: action.step > state.currentStep ? 1 : -1,
+      };
     case "UPDATE_CONFIG":
       return {
         ...state,
@@ -53,7 +58,6 @@ function studioReducer(state: StudioState, action: StudioAction): StudioState {
       const existing = newEdited.get(action.rowId) ?? {};
       newEdited.set(action.rowId, { ...existing, [action.field]: action.value });
 
-      // Also update the row in the dataset
       if (state.dataset) {
         const rows = state.dataset.rows.map((row) => {
           if (row._id === action.rowId) {

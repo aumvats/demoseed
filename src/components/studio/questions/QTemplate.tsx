@@ -6,7 +6,7 @@ import { TEMPLATES } from "@/lib/engine";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 
-export function Step1Template() {
+export function QTemplate() {
   const { state, dispatch } = useStudio();
 
   const select = (templateId: string) => {
@@ -14,28 +14,42 @@ export function Step1Template() {
       type: "UPDATE_CONFIG",
       patch: { template: templateId as "crm" | "ecommerce" | "saas_analytics" },
     });
-    setTimeout(() => dispatch({ type: "SET_STEP", step: 2 }), 250);
+    setTimeout(() => dispatch({ type: "SET_STEP", step: 2 }), 300);
   };
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
-      <h2 className="text-lg font-semibold text-ds-text-primary mb-1 font-display">
-        Choose a template
-      </h2>
-      <p className="text-sm text-ds-text-secondary mb-8">
-        Each template generates realistic, related entities with proper
-        referential integrity.
-      </p>
+    <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
+      <motion.h1
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-3xl sm:text-4xl font-bold text-ds-text-primary font-display tracking-tight text-center mb-3"
+      >
+        What are you building?
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-base text-ds-text-secondary text-center mb-12 max-w-md"
+      >
+        Choose a template for your demo dataset.
+      </motion.p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
         {TEMPLATES.map((template, i) => {
           const isSelected = state.config.template === template.id;
           return (
             <motion.button
               key={template.id}
+              type="button"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                delay: 0.1 + i * 0.08,
+                duration: 0.4,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
               whileHover={{ y: -2 }}
               onClick={() => select(template.id)}
               className={cn(
@@ -46,19 +60,19 @@ export function Step1Template() {
                   : "border-ds-border hover:border-ds-border-hover"
               )}
             >
-              <div className="text-2xl mb-3">{template.icon}</div>
-              <h3 className="text-sm font-semibold text-ds-text-primary mb-1 font-display">
+              <div className="text-3xl mb-4">{template.icon}</div>
+              <h3 className="text-base font-semibold text-ds-text-primary mb-1.5 font-display">
                 {template.label}
               </h3>
-              <p className="text-xs text-ds-text-secondary leading-relaxed">
+              <p className="text-sm text-ds-text-secondary leading-relaxed">
                 {template.description}
               </p>
 
-              <div className="flex flex-wrap gap-1 mt-3">
+              <div className="flex flex-wrap gap-1.5 mt-4">
                 {template.entities.map((e) => (
                   <span
                     key={e.key}
-                    className="text-[10px] px-1.5 py-0.5 bg-ds-bg-tertiary text-ds-text-secondary rounded-md border border-ds-border"
+                    className="text-[11px] px-2 py-0.5 bg-ds-bg-tertiary text-ds-text-secondary rounded-md border border-ds-border"
                   >
                     {e.label}
                   </span>
@@ -66,7 +80,7 @@ export function Step1Template() {
               </div>
 
               {isSelected && (
-                <div className="absolute top-3 right-3 w-5 h-5 rounded-full bg-ds-accent flex items-center justify-center">
+                <div className="absolute top-4 right-4 w-5 h-5 rounded-full bg-ds-accent flex items-center justify-center">
                   <Check className="w-3 h-3 text-[#0C0F14]" />
                 </div>
               )}

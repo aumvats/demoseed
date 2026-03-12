@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useStudio } from "@/contexts/StudioContext";
 import { SCENARIOS, type ScenarioId } from "@/types/engine";
 import { cn } from "@/lib/utils";
@@ -7,7 +8,7 @@ import { Check, ArrowRight } from "lucide-react";
 
 const SCENARIO_LIST = Object.values(SCENARIOS);
 
-export function Step3Scenarios() {
+export function QScenarios() {
   const { state, dispatch } = useStudio();
   const activeScenarios = state.config.scenarios ?? [];
 
@@ -18,29 +19,43 @@ export function Step3Scenarios() {
     dispatch({ type: "UPDATE_CONFIG", patch: { scenarios: next } });
   };
 
-  const goNext = () => {
-    dispatch({ type: "SET_STEP", step: 4 });
+  const advance = () => {
+    dispatch({ type: "SET_STEP", step: 5 });
   };
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <h2 className="text-lg font-semibold text-ds-text-primary mb-1 font-display">
-        Apply scenarios
-      </h2>
-      <p className="text-sm text-ds-text-secondary mb-2">
-        Scenarios inject narrative arcs into your data. Toggle one or both.
-      </p>
-      <p className="text-xs text-ds-text-tertiary mb-8">
-        You can also skip this step — scenarios are optional.
-      </p>
+    <div className="flex-1 flex flex-col items-center justify-center px-6 py-20">
+      <motion.h1
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-3xl sm:text-4xl font-bold text-ds-text-primary font-display tracking-tight text-center mb-3"
+      >
+        Any special scenarios?
+      </motion.h1>
+      <motion.p
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.05, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-base text-ds-text-secondary text-center mb-12 max-w-md"
+      >
+        Scenarios inject narrative arcs into your data. Optional.
+      </motion.p>
 
-      <div className="space-y-3 mb-8">
-        {SCENARIO_LIST.map((scenario) => {
+      <div className="space-y-3 w-full max-w-lg mb-10">
+        {SCENARIO_LIST.map((scenario, i) => {
           const isActive = activeScenarios.includes(scenario.id);
           return (
-            <button
+            <motion.button
               type="button"
               key={scenario.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.1 + i * 0.06,
+                duration: 0.4,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
               onClick={() => toggleScenario(scenario.id)}
               className={cn(
                 "w-full text-left p-5 rounded-2xl border transition-all duration-200",
@@ -60,42 +75,40 @@ export function Step3Scenarios() {
                     <h3 className="text-sm font-semibold text-ds-text-primary font-display">
                       {scenario.label}
                     </h3>
-                    <p className="text-xs text-ds-text-secondary mt-1 leading-relaxed">
+                    <p className="text-sm text-ds-text-secondary mt-1 leading-relaxed">
                       {scenario.description}
                     </p>
-                    <p className="text-[11px] text-ds-text-tertiary mt-1 font-data">
+                    <p className="text-xs text-ds-text-tertiary mt-1 font-data">
                       ~{scenario.defaultPercentage}% of records affected
                     </p>
                   </div>
                 </div>
                 {isActive && (
-                  <div className="w-5 h-5 rounded-full bg-ds-accent flex items-center justify-center shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-ds-accent flex items-center justify-center shrink-0 ml-3">
                     <Check className="w-3 h-3 text-[#0C0F14]" />
                   </div>
                 )}
               </div>
-            </button>
+            </motion.button>
           );
         })}
       </div>
 
-      <div className="flex gap-3">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.4 }}
+        className="flex gap-3"
+      >
         <button
           type="button"
-          onClick={goNext}
-          className="group h-10 px-6 rounded-xl bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] text-sm font-semibold transition-all inline-flex items-center gap-2"
+          onClick={advance}
+          className="group h-11 px-8 rounded-xl bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] text-sm font-semibold transition-all inline-flex items-center gap-2"
         >
-          Continue to Preview
+          {activeScenarios.length > 0 ? "Continue" : "Skip scenarios"}
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </button>
-        <button
-          type="button"
-          onClick={goNext}
-          className="h-10 px-6 rounded-xl glass-panel text-ds-text-primary text-sm font-medium transition-all hover:bg-ds-bg-elevated/60"
-        >
-          Skip scenarios
-        </button>
-      </div>
+      </motion.div>
     </div>
   );
 }
