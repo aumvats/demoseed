@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Sparkles, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { UserMenu } from "./UserMenu";
 
 const NAV_LINKS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -17,7 +16,6 @@ export function AppNav() {
 
   return (
     <nav className="flex items-center justify-between px-4 h-14 border-b border-ds-border bg-ds-bg-secondary shrink-0">
-      {/* Left: Logo + Nav Links */}
       <div className="flex items-center gap-6">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-md bg-gradient-to-br from-ds-accent to-ds-accent-hover flex items-center justify-center">
@@ -49,9 +47,6 @@ export function AppNav() {
           })}
         </div>
       </div>
-
-      {/* Right: User Menu */}
-      <UserMenu />
     </nav>
   );
 }

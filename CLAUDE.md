@@ -24,15 +24,15 @@ src/
 │   ├── page.tsx                    # Landing page (unauthed)
 │   ├── layout.tsx                  # Root layout (Inter + JetBrains Mono, dark mode)
 │   ├── globals.css                 # Design tokens as CSS vars + @theme inline
-│   ├── (app)/                      # Authenticated routes
-│   │   ├── layout.tsx              # AuthProvider + AppNav wrapper
+│   ├── (app)/                      # App routes (no auth)
+│   │   ├── layout.tsx              # AppNav wrapper
 │   │   ├── dashboard/page.tsx      # Dashboard with quick actions + usage
 │   │   ├── generate/page.tsx       # StudioProvider + StudioLayout (5-step wizard)
 │   │   └── history/page.tsx        # Generation history (placeholder)
-│   └── (auth)/                     # Auth routes
-│       ├── layout.tsx              # AuthProvider wrapper
-│       ├── login/page.tsx          # Google OAuth login card
-│       └── callback/route.ts       # OAuth code exchange → redirect
+│   └── (auth)/                     # Auth routes (currently disabled, redirects to /generate)
+│       ├── layout.tsx              # Pass-through wrapper
+│       ├── login/page.tsx          # Redirects to /generate (auth skipped)
+│       └── callback/route.ts       # OAuth code exchange (unused)
 ├── components/
 │   ├── grid/                       # Data preview grid (MOST IMPORTANT component)
 │   │   ├── DataGrid.tsx            # TanStack Table + react-virtual
@@ -43,10 +43,10 @@ src/
 │   │   ├── StudioHelpPanel.tsx     # Context help + stats
 │   │   ├── GenerateButton.tsx      # Shimmer animation button
 │   │   └── steps/                  # Step1Template, Step2Configure, Step3Scenarios, Step4Preview, Step5Export
-│   ├── shared/                     # AppNav, UserMenu
+│   ├── shared/                     # AppNav (UserMenu exists but unused — auth disabled)
 │   └── ui/                         # shadcn components
 ├── contexts/
-│   ├── AuthContext.tsx              # user, session, signInWithGoogle, signOut
+│   ├── AuthContext.tsx              # EXISTS but unused (auth disabled)
 │   └── StudioContext.tsx            # useReducer: wizard step, config, dataset, loading
 ├── hooks/
 │   ├── useGeneration.ts            # Calls engine + progress simulation
@@ -64,7 +64,7 @@ src/
 │   └── supabase/
 │       ├── client.ts               # Browser client (singleton, mock fallback when no env)
 │       └── server.ts               # Server client for SSR
-├── middleware.ts                    # Auth protection for /dashboard, /history
+├── middleware.ts                    # Pass-through (auth disabled)
 └── types/
     ├── engine.ts                   # LocaleCode, TemplateId, ScenarioId, GenerationConfig, etc.
     ├── studio.ts                   # WizardStep, StudioState, StudioAction
@@ -102,29 +102,25 @@ All tokens in `globals.css` as `--ds-*` CSS vars mapped to Tailwind via `@theme 
 - [x] CSV/JSON export with file-saver
 - [x] Seeded RNG (xorshift32) for reproducible data
 - [x] RandomUser.me API with faker.js fallback
-- [x] Supabase auth scaffolding (client, server, middleware, AuthContext)
-- [x] Login page with Google OAuth button
 - [x] Dashboard + History pages (basic)
 - [x] Database migration (3 tables + RLS + triggers + RPC)
 - [x] Deployed to Vercel with env vars
+
+**Auth status**: DISABLED. Auth scaffolding exists (AuthContext, UserMenu, callback route, Supabase client/server) but is not wired up. All routes are publicly accessible. To re-enable auth later, restore AuthProvider in layouts, restore middleware guards, and configure Google OAuth in Supabase.
 
 ---
 
 ## What's NOT Done Yet
 
-- [ ] **Google OAuth**: Not configured in Supabase. Needs Google Cloud Console OAuth credentials (Client ID + Secret), then enable Google provider in Supabase dashboard (Auth → Providers → Google). Redirect URI for Google: `https://eojgnwbquuuvlcaqynuw.supabase.co/auth/v1/callback`. No Google OAuth credentials exist anywhere in the codebase.
-- [ ] **Supabase site URL + redirect URLs**: Need to set `https://demoseed.vercel.app` as site URL and add `https://demoseed.vercel.app/callback` to redirect allow list in Supabase Auth settings.
 - [ ] **Polish items from spec**: Confetti on first export, toast system, skeleton loading states, Cmd+K command palette
-- [ ] **Usage tracking integration**: useGeneration hook has Supabase persistence code but it's not wired to actual auth sessions yet
-- [ ] **Landing page for authed vs unauthed**: Currently same page for both; spec wants Dashboard at `/` for authed users
 - [ ] **History page**: Currently a placeholder, needs to fetch from `generations` table
 
 ---
 
 ## Key Patterns
 
-- **Mock Supabase client**: `src/lib/supabase/client.ts` returns a mock when env vars are missing — app works fully without Supabase configured
-- **Middleware guards**: Protects `/dashboard`, `/history`; skips auth check when Supabase not configured
+- **Auth disabled**: All auth code exists but is disconnected. Middleware is pass-through. No AuthProvider in layouts. Login redirects to /generate.
+- **Mock Supabase client**: `src/lib/supabase/client.ts` returns a mock when env vars are missing
 - **Engine is pure**: `src/lib/engine/` has zero React dependencies, all pure functions
 - **shadcn v4 uses @base-ui/react**: NOT Radix. Don't use `asChild` prop — use `className` directly on trigger components.
 - **StudioContext**: useReducer pattern with `StudioState`/`StudioAction`. Default config: template='crm', locale='us', recordCount=100.
