@@ -28,7 +28,7 @@ src/
 │   │   ├── layout.tsx              # AppNav wrapper
 │   │   ├── dashboard/page.tsx      # Dashboard with quick actions + usage
 │   │   ├── generate/page.tsx       # StudioProvider + StudioLayout (5-step wizard)
-│   │   └── history/page.tsx        # Generation history (placeholder)
+│   │   └── history/page.tsx        # Generation history (localStorage-backed)
 │   └── (auth)/                     # Auth routes (currently disabled, redirects to /generate)
 │       ├── layout.tsx              # Pass-through wrapper
 │       ├── login/page.tsx          # Redirects to /generate (auth skipped)
@@ -36,21 +36,22 @@ src/
 ├── components/
 │   ├── grid/                       # Data preview grid (MOST IMPORTANT component)
 │   │   ├── DataGrid.tsx            # TanStack Table + react-virtual
-│   │   └── cells/                  # 7 cell renderers (Avatar, Badge, Currency, Date, Editable, Number, Percentage)
+│   │   ├── cells/                  # 7 cell renderers (Avatar, Badge, Currency, Date, Editable, Number, Percentage)
+│   │   └── GridSkeleton.tsx        # Pulse-animated loading skeleton
 │   ├── studio/                     # Generation wizard
 │   │   ├── StudioLayout.tsx        # 3-panel layout (stepper | content | help)
 │   │   ├── StudioStepper.tsx       # Vertical step navigation
 │   │   ├── StudioHelpPanel.tsx     # Context help + stats
 │   │   ├── GenerateButton.tsx      # Shimmer animation button
 │   │   └── steps/                  # Step1Template, Step2Configure, Step3Scenarios, Step4Preview, Step5Export
-│   ├── shared/                     # AppNav (UserMenu exists but unused — auth disabled)
+│   ├── shared/                     # AppNav, CommandPalette (Cmd+K)
 │   └── ui/                         # shadcn components
 ├── contexts/
 │   ├── AuthContext.tsx              # EXISTS but unused (auth disabled)
 │   └── StudioContext.tsx            # useReducer: wizard step, config, dataset, loading
 ├── hooks/
-│   ├── useGeneration.ts            # Calls engine + progress simulation
-│   └── useExport.ts                # CSV/JSON export via file-saver
+│   ├── useGeneration.ts            # Calls engine + progress simulation + saves to history
+│   └── useExport.ts                # CSV/JSON export with toast + confetti on first export
 ├── lib/
 │   ├── engine/                     # Core data generation (pure functions, no React)
 │   │   ├── index.ts                # Public API: generateDataset(config)
@@ -61,6 +62,7 @@ src/
 │   │   ├── locale/index.ts         # 5 locale adapters (phone, currency, formatting)
 │   │   ├── templates/              # crm.ts, ecommerce.ts, saasAnalytics.ts, index.ts
 │   │   └── exporters/              # csv.ts (UTF-8 BOM), json.ts
+│   ├── history.ts                  # localStorage-backed generation history (add/get/clear)
 │   └── supabase/
 │       ├── client.ts               # Browser client (singleton, mock fallback when no env)
 │       └── server.ts               # Server client for SSR
@@ -102,18 +104,16 @@ All tokens in `globals.css` as `--ds-*` CSS vars mapped to Tailwind via `@theme 
 - [x] CSV/JSON export with file-saver
 - [x] Seeded RNG (xorshift32) for reproducible data
 - [x] RandomUser.me API with faker.js fallback
-- [x] Dashboard + History pages (basic)
+- [x] Dashboard + History pages (localStorage-backed)
 - [x] Database migration (3 tables + RLS + triggers + RPC)
 - [x] Deployed to Vercel with env vars
+- [x] Toast system (sonner, bottom-right, dark theme)
+- [x] Confetti on first export (canvas-confetti)
+- [x] Grid skeleton loading component
+- [x] Cmd+K command palette (cmdk) with navigation, templates, quick actions
+- [x] Generation history tracked in localStorage
 
 **Auth status**: DISABLED. Auth scaffolding exists (AuthContext, UserMenu, callback route, Supabase client/server) but is not wired up. All routes are publicly accessible. To re-enable auth later, restore AuthProvider in layouts, restore middleware guards, and configure Google OAuth in Supabase.
-
----
-
-## What's NOT Done Yet
-
-- [ ] **Polish items from spec**: Confetti on first export, toast system, skeleton loading states, Cmd+K command palette
-- [ ] **History page**: Currently a placeholder, needs to fetch from `generations` table
 
 ---
 
@@ -124,7 +124,9 @@ All tokens in `globals.css` as `--ds-*` CSS vars mapped to Tailwind via `@theme 
 - **Engine is pure**: `src/lib/engine/` has zero React dependencies, all pure functions
 - **shadcn v4 uses @base-ui/react**: NOT Radix. Don't use `asChild` prop — use `className` directly on trigger components.
 - **StudioContext**: useReducer pattern with `StudioState`/`StudioAction`. Default config: template='crm', locale='us', recordCount=100.
-- **Data generation is client-side only**: Generated data never hits the backend. Only configs/history are persisted to Supabase.
+- **Data generation is client-side only**: Generated data never hits the backend. History is stored in localStorage.
+- **First export tracking**: `localStorage("demoseed:first-export-done")` gates confetti. Clear it to re-trigger.
+- **History**: `localStorage("demoseed:generation-history")` stores up to 20 entries. Managed via `src/lib/history.ts`.
 
 ---
 
