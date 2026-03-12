@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useStudio } from "@/contexts/StudioContext";
 import { generateDataset } from "@/lib/engine";
+import { addToHistory } from "@/lib/history";
 import type { GenerationConfig } from "@/types/engine";
 
 export function useGeneration() {
@@ -25,7 +27,6 @@ export function useGeneration() {
         seed: config?.seed ?? state.config.seed,
       };
 
-      // Simulate progress
       const progressInterval = setInterval(() => {
         progressRef.current = Math.min(progressRef.current + 8, 85);
         dispatch({
@@ -39,14 +40,22 @@ export function useGeneration() {
         clearInterval(progressInterval);
         dispatch({ type: "GENERATION_PROGRESS", progress: 95 });
 
-        // Brief pause for animation feel
         await new Promise((r) => setTimeout(r, 200));
         dispatch({ type: "GENERATION_COMPLETE", dataset });
+
+        // Save to local history
+        addToHistory({
+          template: fullConfig.template,
+          locale: fullConfig.locale,
+          recordCount: dataset.rows.length,
+          scenarios: fullConfig.scenarios,
+          durationMs: dataset.durationMs,
+        });
       } catch (err) {
         clearInterval(progressInterval);
-        setError(
-          err instanceof Error ? err.message : "Generation failed"
-        );
+        const msg = err instanceof Error ? err.message : "Generation failed";
+        setError(msg);
+        toast.error("Generation failed", { description: msg });
         dispatch({ type: "GENERATION_PROGRESS", progress: 0 });
       }
     },
