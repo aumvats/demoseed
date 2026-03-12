@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   Sparkles,
   Globe,
@@ -8,39 +11,47 @@ import {
   Zap,
   Shield,
   Check,
+  ArrowRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HeroDataGrid } from "@/components/landing/HeroDataGrid";
 
 const FEATURES = [
   {
     icon: Table2,
     title: "3 Built-in Templates",
-    description: "CRM, E-commerce, and SaaS Analytics with related entities and realistic fields.",
+    description:
+      "CRM, E-commerce, and SaaS Analytics with related entities and realistic fields.",
   },
   {
     icon: Globe,
     title: "5 Locales",
-    description: "US, UK, Germany, France, Japan — with locale-correct phones, addresses, and currency.",
+    description:
+      "US, UK, Germany, France, Japan — with locale-correct phones, addresses, and currency.",
   },
   {
     icon: Shuffle,
     title: "Narrative Scenarios",
-    description: "Inject churning customers or power users — your data tells a story, not random noise.",
+    description:
+      "Inject churning customers or power users — your data tells a story, not random noise.",
   },
   {
     icon: Download,
     title: "CSV & JSON Export",
-    description: "UTF-8 with BOM for Excel, or pretty-printed JSON with preserved relationships.",
+    description:
+      "UTF-8 with BOM for Excel, or pretty-printed JSON with preserved relationships.",
   },
   {
     icon: Zap,
     title: "Client-Side Generation",
-    description: "Your data never touches our servers. Generated in-browser using real APIs + faker fallback.",
+    description:
+      "Your data never touches our servers. Generated in-browser using real APIs + faker fallback.",
   },
   {
     icon: Shield,
     title: "Referential Integrity",
-    description: "Every order references a real customer. Every deal links to a company. Enforced, not decorative.",
+    description:
+      "Every order references a real customer. Every deal links to a company. Enforced, not decorative.",
   },
 ];
 
@@ -80,16 +91,18 @@ const PRICING = [
   },
 ];
 
+const ease = [0.16, 1, 0.3, 1] as const;
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-ds-bg-primary flex flex-col">
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 h-14 border-b border-ds-border sticky top-0 bg-ds-bg-primary/80 backdrop-blur-sm z-50">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-gradient-to-br from-ds-accent to-ds-accent-hover flex items-center justify-center">
-            <span className="text-white font-bold text-sm">D</span>
+      <nav className="flex items-center justify-between px-6 h-14 sticky top-0 z-50 glass-panel-strong">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#E8AF44] to-[#D49A2E] flex items-center justify-center shadow-sm">
+            <span className="text-[#0C0F14] font-bold text-sm font-display">D</span>
           </div>
-          <span className="text-ds-text-primary font-semibold text-sm">
+          <span className="text-ds-text-primary font-semibold text-[15px] tracking-tight font-display">
             DemoSeed
           </span>
         </div>
@@ -102,70 +115,112 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center px-6 pt-24 pb-20">
-        <div className="max-w-2xl text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-ds-border bg-ds-bg-secondary text-xs text-ds-text-secondary mb-6">
-            <Sparkles className="w-3 h-3 text-ds-accent" />
-            Realistic demo data in 30 seconds
-          </div>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 gradient-mesh" />
+        <div className="absolute inset-0 noise-overlay" />
 
-          <h1 className="text-[40px] font-bold text-ds-text-primary leading-tight tracking-tight mb-4">
-            Stop demoing with
-            <br />
-            <span className="text-ds-accent">John Doe, test@test.com</span>
-          </h1>
+        <div className="relative max-w-6xl mx-auto px-6 pt-28 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left column */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease }}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass-panel text-xs text-ds-text-secondary mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-ds-accent animate-pulse-subtle" />
+              Realistic demo data in 30 seconds
+            </div>
 
-          <p className="text-base text-ds-text-secondary leading-relaxed mb-8 max-w-lg mx-auto">
-            DemoSeed generates locale-aware, narrative-driven fake data for your
-            SaaS demo environments. Realistic users, transactions, and activity
-            logs — not random noise.
-          </p>
+            <h1 className="text-[44px] lg:text-[56px] font-bold text-ds-text-primary leading-[1.08] tracking-tight font-display mb-6">
+              Stop demoing with{" "}
+              <span className="text-ds-accent">fake-looking</span> fake data.
+            </h1>
 
-          <div className="flex items-center justify-center gap-3">
-            <Link
-              href="/generate"
-              className="h-10 px-6 rounded-md bg-ds-accent hover:bg-ds-accent-hover text-white text-sm font-medium inline-flex items-center gap-2 transition-colors glow-accent-hover"
-            >
-              <Sparkles className="w-4 h-4" />
-              Try it now — free
-            </Link>
-            <Link
-              href="#pricing"
-              className="h-10 px-6 rounded-md bg-ds-bg-secondary border border-ds-border hover:bg-ds-bg-tertiary text-ds-text-primary text-sm font-medium inline-flex items-center transition-colors"
-            >
-              See pricing
-            </Link>
-          </div>
+            <p className="text-lg text-ds-text-secondary leading-relaxed mb-10 max-w-md">
+              Generate locale-aware, narrative-driven datasets for your SaaS
+              demos. Real names, real addresses, real stories.
+            </p>
+
+            <div className="flex items-center gap-4">
+              <Link
+                href="/generate"
+                className="group h-11 px-7 rounded-xl bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] text-sm font-semibold inline-flex items-center gap-2 transition-all glow-accent-hover shadow-lg"
+              >
+                Start generating
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link
+                href="#features"
+                className="h-11 px-7 rounded-xl glass-panel text-ds-text-primary text-sm font-medium inline-flex items-center transition-all hover:bg-ds-bg-elevated/60"
+              >
+                See how it works
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Right column — animated product demo */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease }}
+            className="relative hidden lg:block"
+          >
+            <div className="absolute -inset-8 bg-gradient-to-br from-ds-accent/10 via-transparent to-transparent rounded-3xl blur-2xl" />
+            <div className="relative">
+              <HeroDataGrid />
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="px-6 py-20 border-t border-ds-border">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-lg font-semibold text-ds-text-primary text-center mb-2">
-            Everything you need for believable demo data
-          </h2>
-          <p className="text-sm text-ds-text-secondary text-center mb-12 max-w-lg mx-auto">
-            Built for sales engineers, product teams, and developer advocates
-            who are tired of &quot;test user #1&quot;.
-          </p>
+      {/* Features — Bento Grid */}
+      <section id="features" className="px-6 py-28 border-t border-ds-border">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-[32px] font-bold text-ds-text-primary tracking-tight font-display mb-3">
+              Everything for believable demo data
+            </h2>
+            <p className="text-base text-ds-text-secondary max-w-lg mx-auto">
+              Built for sales engineers, product teams, and developer advocates
+              who are tired of &quot;test user #1.&quot;
+            </p>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map((feature) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURES.map((feature, i) => {
               const Icon = feature.icon;
+              const isLarge = i === 0 || i === 3;
               return (
-                <div
+                <motion.div
                   key={feature.title}
-                  className="p-5 rounded-lg border border-ds-border bg-ds-bg-secondary hover:border-zinc-600 transition-colors"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ delay: i * 0.08, duration: 0.5 }}
+                  className={cn(
+                    "group relative p-6 rounded-2xl border border-ds-border bg-ds-bg-secondary/60 hover:border-ds-border-hover transition-all duration-300 overflow-hidden",
+                    isLarge && "lg:col-span-2"
+                  )}
                 >
-                  <Icon className="w-5 h-5 text-ds-accent mb-3" />
-                  <h3 className="text-sm font-semibold text-ds-text-primary mb-1">
-                    {feature.title}
-                  </h3>
-                  <p className="text-xs text-ds-text-secondary leading-relaxed">
-                    {feature.description}
-                  </p>
-                </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-ds-accent-muted to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-xl bg-ds-accent-muted flex items-center justify-center mb-4">
+                      <Icon className="w-5 h-5 text-ds-accent" />
+                    </div>
+                    <h3 className="text-[15px] font-semibold text-ds-text-primary mb-2 font-display">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-ds-text-secondary leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </motion.div>
               );
             })}
           </div>
@@ -173,85 +228,99 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="px-6 py-20 border-t border-ds-border">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-lg font-semibold text-ds-text-primary text-center mb-2">
-            Simple pricing
-          </h2>
-          <p className="text-sm text-ds-text-secondary text-center mb-12">
-            Start free, upgrade when you need more.
-          </p>
+      <section id="pricing" className="px-6 py-28 border-t border-ds-border">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-[32px] font-bold text-ds-text-primary tracking-tight font-display mb-3">
+              Simple pricing
+            </h2>
+            <p className="text-base text-ds-text-secondary">
+              Start free, upgrade when you need more.
+            </p>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {PRICING.map((plan) => (
-              <div
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {PRICING.map((plan, i) => (
+              <motion.div
                 key={plan.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
                 className={cn(
-                  "p-6 rounded-lg border-2 transition-all",
+                  "relative p-8 rounded-2xl transition-all",
                   plan.highlighted
-                    ? "border-ds-accent bg-ds-bg-secondary glow-accent"
-                    : "border-ds-border bg-ds-bg-secondary"
+                    ? "glass-panel-strong border border-ds-border-accent glow-accent"
+                    : "bg-ds-bg-secondary border border-ds-border"
                 )}
               >
                 {plan.highlighted && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-ds-accent/15 text-ds-accent border border-ds-accent/30 mb-3">
+                  <span className="absolute -top-3 left-6 px-3 py-1 rounded-full text-[11px] font-semibold bg-ds-accent text-[#0C0F14]">
                     Most popular
                   </span>
                 )}
-                <h3 className="text-sm font-semibold text-ds-text-primary">
+                <h3 className="text-lg font-semibold text-ds-text-primary font-display">
                   {plan.name}
                 </h3>
-                <div className="flex items-baseline gap-1 mt-2 mb-1">
-                  <span className="text-2xl font-bold text-ds-text-primary">
+                <div className="flex items-baseline gap-1 mt-3 mb-2">
+                  <span className="text-[40px] font-bold text-ds-text-primary font-display">
                     {plan.price}
                   </span>
-                  <span className="text-sm text-ds-text-secondary">
+                  <span className="text-base text-ds-text-secondary">
                     {plan.period}
                   </span>
                 </div>
-                <p className="text-xs text-ds-text-secondary mb-5">
+                <p className="text-sm text-ds-text-secondary mb-8">
                   {plan.description}
                 </p>
-                <ul className="space-y-2 mb-6">
-                  {plan.features.map((feature) => (
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((f) => (
                     <li
-                      key={feature}
-                      className="flex items-center gap-2 text-xs text-ds-text-secondary"
+                      key={f}
+                      className="flex items-center gap-2.5 text-sm text-ds-text-secondary"
                     >
-                      <Check className="w-3.5 h-3.5 text-ds-success shrink-0" />
-                      {feature}
+                      <Check className="w-4 h-4 text-ds-success shrink-0" />
+                      {f}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={plan.ctaHref}
                   className={cn(
-                    "w-full h-9 rounded-md text-sm font-medium inline-flex items-center justify-center transition-colors",
+                    "w-full h-11 rounded-xl text-sm font-semibold inline-flex items-center justify-center transition-all",
                     plan.highlighted
-                      ? "bg-ds-accent hover:bg-ds-accent-hover text-white"
-                      : "bg-ds-bg-tertiary border border-ds-border hover:bg-ds-bg-tertiary text-ds-text-primary"
+                      ? "bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] glow-accent-hover"
+                      : "bg-ds-bg-tertiary border border-ds-border hover:bg-ds-bg-elevated text-ds-text-primary"
                   )}
                 >
                   {plan.cta}
                 </Link>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-8 border-t border-ds-border">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-ds-accent to-ds-accent-hover flex items-center justify-center">
-              <span className="text-white font-bold text-[10px]">D</span>
+      <footer className="px-6 py-12 border-t border-ds-border">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#E8AF44] to-[#D49A2E] flex items-center justify-center">
+              <span className="text-[#0C0F14] font-bold text-[10px] font-display">
+                D
+              </span>
             </div>
-            <span className="text-xs text-ds-text-secondary">
+            <span className="text-sm text-ds-text-secondary">
               DemoSeed &copy; {new Date().getFullYear()}
             </span>
           </div>
-          <p className="text-xs text-ds-text-secondary">
+          <p className="text-sm text-ds-text-tertiary">
             Realistic demo data for SaaS teams
           </p>
         </div>

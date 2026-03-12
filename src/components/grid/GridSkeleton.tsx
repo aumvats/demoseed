@@ -18,7 +18,7 @@ function SkeletonCell({ wide }: { wide?: boolean }) {
 
 export function GridSkeleton() {
   return (
-    <div className="w-full h-full overflow-hidden rounded-md border border-ds-border">
+    <div className="w-full h-full overflow-hidden rounded-xl border border-ds-border">
       {/* Header */}
       <div className="flex items-center gap-4 px-4 h-10 bg-ds-bg-secondary border-b border-ds-border">
         {Array.from({ length: SKELETON_COLS }).map((_, i) => (

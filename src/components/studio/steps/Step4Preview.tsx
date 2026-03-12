@@ -6,7 +6,7 @@ import { useGeneration } from "@/hooks/useGeneration";
 import { DataGrid } from "@/components/grid/DataGrid";
 import { GenerateButton } from "../GenerateButton";
 import { getTemplateFields } from "@/lib/engine";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 export function Step4Preview() {
   const { state, dispatch } = useStudio();
@@ -37,13 +37,13 @@ export function Step4Preview() {
   return (
     <div className="flex flex-col h-full">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-ds-border shrink-0">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-ds-border glass-panel-strong shrink-0">
         <div>
-          <h2 className="text-sm font-semibold text-ds-text-primary">
+          <h2 className="text-sm font-semibold text-ds-text-primary font-display">
             Data Preview
           </h2>
           {state.dataset && (
-            <p className="text-[11px] text-ds-text-secondary mt-0.5 font-data">
+            <p className="text-[11px] text-ds-text-tertiary mt-0.5 font-data">
               {state.dataset.rows.length.toLocaleString()} rows &middot;
               generated in {state.dataset.durationMs}ms
             </p>
@@ -58,10 +58,12 @@ export function Step4Preview() {
           />
           {state.dataset && (
             <button
+              type="button"
               onClick={goNext}
-              className="h-9 px-4 rounded-md bg-ds-bg-secondary border border-ds-border hover:bg-ds-bg-tertiary text-ds-text-primary text-sm font-medium transition-colors"
+              className="group h-10 px-5 rounded-xl glass-panel text-ds-text-primary text-sm font-medium transition-all hover:bg-ds-bg-elevated/60 inline-flex items-center gap-2"
             >
               Export
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
           )}
         </div>
@@ -78,19 +80,19 @@ export function Step4Preview() {
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full">
-            <div className="w-12 h-12 rounded-full bg-ds-accent/10 flex items-center justify-center mb-4">
-              <Sparkles className="w-6 h-6 text-ds-accent" />
+            <div className="w-14 h-14 rounded-2xl bg-ds-accent-muted flex items-center justify-center mb-5">
+              <Sparkles className="w-7 h-7 text-ds-accent" />
             </div>
-            <h3 className="text-sm font-medium text-ds-text-primary mb-1">
+            <h3 className="text-base font-medium text-ds-text-primary mb-1 font-display">
               {isGenerating ? "Generating your data..." : "Ready to generate"}
             </h3>
-            <p className="text-xs text-ds-text-secondary mb-4">
+            <p className="text-sm text-ds-text-secondary mb-5">
               {isGenerating
                 ? "This should only take a moment"
                 : "Click generate to create your dataset"}
             </p>
             {isGenerating && (
-              <div className="w-48 h-1.5 bg-ds-bg-tertiary rounded-full overflow-hidden">
+              <div className="w-56 h-2 bg-ds-bg-tertiary rounded-full overflow-hidden">
                 <div
                   className="h-full bg-ds-accent rounded-full transition-all duration-200"
                   style={{ width: `${progress}%` }}
@@ -102,7 +104,7 @@ export function Step4Preview() {
       </div>
 
       {error && (
-        <div className="px-6 py-3 bg-red-500/10 border-t border-red-500/30 text-sm text-red-400">
+        <div className="px-6 py-3 bg-ds-destructive/10 border-t border-ds-destructive/30 text-sm text-ds-destructive">
           {error}
         </div>
       )}

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Clock, BarChart3, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { Sparkles, Clock, ArrowRight } from "lucide-react";
 
 const QUICK_ACTIONS = [
   {
@@ -9,95 +10,184 @@ const QUICK_ACTIONS = [
     icon: Sparkles,
     title: "New Generation",
     description: "Create a fresh dataset from a template",
-    gradient: "from-violet-500/20 to-violet-600/5",
+    gradient: "from-[#E8AF44]/10 to-transparent",
   },
   {
     href: "/history",
     icon: Clock,
     title: "Recent Exports",
     description: "View and re-download past generations",
-    gradient: "from-emerald-500/20 to-emerald-600/5",
+    gradient: "from-[#34D399]/10 to-transparent",
   },
 ];
 
-export default function DashboardPage() {
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
+function UsageRing({ used, total }: { used: number; total: number }) {
+  const radius = 40;
+  const circumference = 2 * Math.PI * radius;
+  const progress = total > 0 ? used / total : 0;
+  const offset = circumference - progress * circumference;
+
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-base font-semibold text-ds-text-primary mb-1">
-        Dashboard
-      </h1>
-      <p className="text-sm text-ds-text-secondary mb-8">
-        Welcome to DemoSeed. Generate realistic demo data in seconds.
-      </p>
+    <svg width="100" height="100" viewBox="0 0 100 100" className="shrink-0">
+      {/* Background ring */}
+      <circle
+        cx="50"
+        cy="50"
+        r={radius}
+        fill="none"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="8"
+      />
+      {/* Progress ring */}
+      <motion.circle
+        cx="50"
+        cy="50"
+        r={radius}
+        fill="none"
+        stroke="#E8AF44"
+        strokeWidth="8"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset: offset }}
+        transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        transform="rotate(-90 50 50)"
+      />
+      {/* Center text */}
+      <text
+        x="50"
+        y="48"
+        textAnchor="middle"
+        className="fill-ds-text-primary text-lg font-bold font-display"
+        fontSize="18"
+        fontWeight="700"
+      >
+        {used}
+      </text>
+      <text
+        x="50"
+        y="62"
+        textAnchor="middle"
+        className="fill-ds-text-tertiary text-[10px]"
+        fontSize="10"
+      >
+        / {total}
+      </text>
+    </svg>
+  );
+}
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+export default function DashboardPage() {
+  const greeting = getGreeting();
+
+  return (
+    <div className="p-8 lg:p-12 max-w-5xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease }}
+      >
+        <h1 className="text-2xl font-bold text-ds-text-primary font-display tracking-tight mb-1">
+          {greeting}
+        </h1>
+        <p className="text-sm text-ds-text-secondary mb-10">
+          Generate realistic demo data in seconds.
+        </p>
+      </motion.div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.5, ease }}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-12"
+      >
         {QUICK_ACTIONS.map((action) => {
           const Icon = action.icon;
           return (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="group relative p-5 rounded-lg border border-ds-border bg-ds-bg-secondary hover:border-zinc-600 transition-all overflow-hidden"
-            >
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-100 transition-opacity`}
-              />
-              <div className="relative">
-                <Icon className="w-5 h-5 text-ds-accent mb-3" />
-                <h3 className="text-sm font-semibold text-ds-text-primary mb-0.5 flex items-center gap-1">
-                  {action.title}
-                  <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                </h3>
-                <p className="text-xs text-ds-text-secondary">
-                  {action.description}
-                </p>
-              </div>
+            <Link key={action.href} href={action.href}>
+              <motion.div
+                whileHover={{ y: -2, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="group relative p-6 rounded-2xl glass-panel hover:border-ds-border-hover transition-all overflow-hidden cursor-pointer"
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-ds-accent-muted flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-ds-accent" />
+                  </div>
+                  <h3 className="text-base font-semibold text-ds-text-primary mb-1 flex items-center gap-2 font-display">
+                    {action.title}
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                  </h3>
+                  <p className="text-sm text-ds-text-secondary">
+                    {action.description}
+                  </p>
+                </div>
+              </motion.div>
             </Link>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Usage Stats */}
-      <div className="mb-10">
-        <h2 className="text-xs font-semibold text-ds-text-secondary uppercase tracking-wider mb-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5, ease }}
+        className="mb-12"
+      >
+        <h2 className="text-xs font-semibold text-ds-text-tertiary uppercase tracking-[0.15em] mb-4 font-display">
           Usage this month
         </h2>
-        <div className="bg-ds-bg-secondary border border-ds-border rounded-lg p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-ds-accent" />
-              <span className="text-sm text-ds-text-primary font-medium">
-                Records generated
-              </span>
-            </div>
-            <span className="text-sm text-ds-text-secondary font-data">
+        <div className="glass-panel rounded-2xl p-6 flex items-center gap-8">
+          <UsageRing used={0} total={500} />
+          <div>
+            <p className="text-2xl font-bold text-ds-text-primary font-data tabular-nums">
               0 / 500
-            </span>
+            </p>
+            <p className="text-sm text-ds-text-secondary mt-1">
+              records generated
+            </p>
+            <p className="text-xs text-ds-text-tertiary mt-2">
+              Free tier resets monthly
+            </p>
           </div>
-          <div className="w-full h-2 bg-ds-bg-tertiary rounded-full overflow-hidden">
-            <div
-              className="h-full bg-ds-accent rounded-full transition-all"
-              style={{ width: "0%" }}
-            />
-          </div>
-          <p className="text-xs text-ds-text-secondary mt-2">
-            Free tier: 500 records/month
-          </p>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Recent Generations - placeholder */}
-      <div>
-        <h2 className="text-xs font-semibold text-ds-text-secondary uppercase tracking-wider mb-4">
+      {/* Recent Generations */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5, ease }}
+      >
+        <h2 className="text-xs font-semibold text-ds-text-tertiary uppercase tracking-[0.15em] mb-4 font-display">
           Recent Generations
         </h2>
-        <div className="bg-ds-bg-secondary border border-ds-border rounded-lg p-8 text-center">
-          <p className="text-sm text-ds-text-secondary">
+        <div className="glass-panel rounded-2xl p-10 text-center">
+          <div className="w-12 h-12 rounded-xl bg-ds-accent-muted flex items-center justify-center mx-auto mb-4">
+            <Sparkles className="w-6 h-6 text-ds-accent" />
+          </div>
+          <p className="text-sm text-ds-text-secondary mb-1">
+            No generations yet
+          </p>
+          <p className="text-xs text-ds-text-tertiary">
             Your generation history will appear here after your first export.
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

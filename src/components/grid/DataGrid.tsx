@@ -144,9 +144,9 @@ export function DataGrid({
   const totalHeight = virtualizer.getTotalSize();
 
   return (
-    <div className="flex flex-col h-full bg-ds-bg-secondary border border-ds-border rounded-md overflow-hidden">
+    <div className="flex flex-col h-full bg-ds-bg-secondary/60 border border-ds-border rounded-xl overflow-hidden shadow-md">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-ds-border bg-ds-bg-secondary">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-ds-border bg-ds-bg-secondary/80">
         <span className="text-xs text-ds-text-secondary font-data">
           {rows.length.toLocaleString()} rows
         </span>
@@ -175,8 +175,8 @@ export function DataGrid({
                         minWidth: header.getSize(),
                       }}
                       className={cn(
-                        "px-3 py-2.5 text-left text-[11px] font-medium text-ds-text-secondary uppercase tracking-wider select-none",
-                        "border-r border-ds-border last:border-r-0 shrink-0",
+                        "px-3 py-3 text-left text-[11px] font-semibold text-ds-text-tertiary uppercase tracking-[0.08em] select-none",
+                        "border-r border-ds-border/60 last:border-r-0 shrink-0",
                         isPinned &&
                           "sticky left-0 z-20 bg-ds-bg-tertiary shadow-[2px_0_4px_rgba(0,0,0,0.3)]",
                         header.column.getCanSort() &&
@@ -222,7 +222,7 @@ export function DataGrid({
               <div
                 key={row.id}
                 className={cn(
-                  "flex border-b border-ds-border hover:bg-ds-bg-tertiary/50 transition-colors border-l-2",
+                  "flex border-b border-ds-border/40 hover:bg-ds-bg-tertiary/40 transition-colors duration-150 border-l-2",
                   scenarioBorderColor,
                   isAnimating && "animate-cell-appear"
                 )}

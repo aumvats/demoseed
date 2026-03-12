@@ -18,20 +18,21 @@ export function GenerateButton({
 }: GenerateButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={isLoading}
       className={cn(
-        "relative h-9 px-5 rounded-md text-sm font-medium text-white overflow-hidden",
-        "transition-all duration-150 disabled:cursor-not-allowed",
-        "bg-ds-accent hover:bg-ds-accent-hover glow-accent-hover",
+        "relative h-10 px-6 rounded-xl text-sm font-semibold overflow-hidden",
+        "transition-all duration-200 disabled:cursor-not-allowed",
+        "bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] glow-accent-hover",
         isLoading &&
-          "animate-shimmer bg-gradient-to-r from-ds-accent via-violet-400 to-ds-accent bg-[length:200%_100%]"
+          "animate-shimmer bg-gradient-to-r from-[#E8AF44] via-[#F5D78E] to-[#E8AF44] bg-[length:200%_100%] animate-glow-pulse"
       )}
     >
       {/* Progress bar at bottom */}
       {isLoading && (
         <div
-          className="absolute bottom-0 left-0 h-0.5 bg-violet-200/60 transition-all duration-200"
+          className="absolute bottom-0 left-0 h-0.5 bg-[#0C0F14]/30 transition-all duration-200"
           style={{ width: `${progress}%` }}
         />
       )}

@@ -12,7 +12,7 @@ export function StudioStepper() {
 
   return (
     <nav className="p-4">
-      <div className="text-[11px] font-semibold text-ds-text-secondary uppercase tracking-widest mb-6 px-2">
+      <div className="text-[11px] font-semibold text-ds-text-tertiary uppercase tracking-[0.15em] mb-8 px-3 font-display">
         Generation Studio
       </div>
       <ol className="relative">
@@ -28,35 +28,36 @@ export function StudioStepper() {
                 <div className="absolute left-[18px] top-[36px] w-[2px] h-[calc(100%-4px)]">
                   <div className="w-full h-full bg-ds-border rounded-full" />
                   {isCompleted && (
-                    <div className="absolute top-0 left-0 w-full h-full bg-ds-accent rounded-full" />
+                    <div className="absolute top-0 left-0 w-full h-full bg-ds-accent rounded-full transition-all duration-500" />
                   )}
                 </div>
               )}
 
               <button
+                type="button"
                 onClick={() =>
                   isCompleted && dispatch({ type: "SET_STEP", step })
                 }
                 disabled={!isCompleted && !isCurrent}
                 className={cn(
-                  "flex items-center gap-3 w-full px-2 py-2.5 rounded-md mb-1 text-left transition-colors",
+                  "flex items-center gap-3 w-full px-2 py-2.5 rounded-lg mb-1 text-left transition-all duration-200",
                   "disabled:cursor-not-allowed",
-                  isCurrent && "bg-ds-accent/10",
+                  isCurrent && "bg-ds-accent-muted",
                   isCompleted && "hover:bg-ds-bg-tertiary cursor-pointer"
                 )}
               >
                 <div
                   className={cn(
-                    "w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all duration-200",
-                    isCompleted && "bg-ds-accent border-ds-accent text-white",
+                    "w-8 h-8 shrink-0 rounded-lg flex items-center justify-center text-sm font-semibold transition-all duration-300",
+                    isCompleted && "bg-ds-accent text-[#0C0F14]",
                     isCurrent &&
-                      "bg-ds-bg-tertiary border-ds-accent text-ds-accent",
+                      "bg-ds-accent-muted border border-ds-border-accent text-ds-accent",
                     !isCompleted &&
                       !isCurrent &&
-                      "bg-ds-bg-tertiary border-ds-border text-ds-text-secondary"
+                      "bg-ds-bg-tertiary text-ds-text-tertiary"
                   )}
                 >
-                  {isCompleted ? <Check className="w-4 h-4" /> : step}
+                  {isCompleted ? <Check className="w-3.5 h-3.5" /> : step}
                 </div>
 
                 <div>

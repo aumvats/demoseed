@@ -42,12 +42,12 @@ export function Step5Export() {
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
-      <h2 className="text-base font-semibold text-ds-text-primary mb-1">
+      <h2 className="text-lg font-semibold text-ds-text-primary mb-1 font-display">
         Export your data
       </h2>
       <p className="text-sm text-ds-text-secondary mb-8">
         Choose a format and download your{" "}
-        <span className="font-data">
+        <span className="font-data text-ds-text-primary">
           {state.dataset.rows.length.toLocaleString()}
         </span>{" "}
         records.
@@ -60,31 +60,37 @@ export function Step5Export() {
           const Icon = format.icon;
           return (
             <button
+              type="button"
               key={format.id}
               onClick={() => setSelectedFormat(format.id)}
               className={cn(
-                "w-full text-left p-4 rounded-md border-2 transition-all duration-150",
-                "bg-ds-bg-secondary hover:bg-ds-bg-tertiary",
+                "w-full text-left p-5 rounded-2xl border transition-all duration-200",
+                "bg-ds-bg-secondary/60 hover:bg-ds-bg-tertiary",
                 isSelected
-                  ? "border-ds-accent"
-                  : "border-ds-border hover:border-zinc-600"
+                  ? "border-ds-border-accent"
+                  : "border-ds-border hover:border-ds-border-hover"
               )}
             >
               <div className="flex items-center gap-3">
-                <Icon
-                  className={cn(
-                    "w-5 h-5",
-                    isSelected ? "text-ds-accent" : "text-ds-text-secondary"
-                  )}
-                />
+                <div className={cn(
+                  "w-10 h-10 rounded-xl flex items-center justify-center shrink-0",
+                  isSelected ? "bg-ds-accent-muted" : "bg-ds-bg-tertiary"
+                )}>
+                  <Icon
+                    className={cn(
+                      "w-5 h-5",
+                      isSelected ? "text-ds-accent" : "text-ds-text-secondary"
+                    )}
+                  />
+                </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-ds-text-primary">
+                  <h3 className="text-sm font-semibold text-ds-text-primary font-display">
                     {format.label}
                   </h3>
                   <p className="text-xs text-ds-text-secondary mt-0.5">
                     {format.description}
                   </p>
-                  <p className="text-[11px] text-ds-text-secondary mt-1">
+                  <p className="text-[11px] text-ds-text-tertiary mt-1">
                     Best for: {format.best}
                   </p>
                 </div>
@@ -96,13 +102,14 @@ export function Step5Export() {
 
       {/* Download button */}
       <button
+        type="button"
         onClick={() => exportData(selectedFormat)}
         disabled={isExporting}
         className={cn(
-          "h-10 px-6 rounded-md text-sm font-medium text-white inline-flex items-center gap-2 transition-all",
+          "h-11 px-7 rounded-xl text-sm font-semibold inline-flex items-center gap-2 transition-all",
           exported
-            ? "bg-ds-success"
-            : "bg-ds-accent hover:bg-ds-accent-hover glow-accent-hover",
+            ? "bg-ds-success text-[#0C0F14]"
+            : "bg-ds-accent hover:bg-ds-accent-hover text-[#0C0F14] glow-accent-hover",
           isExporting && "opacity-70 cursor-not-allowed"
         )}
       >

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useStudio } from "@/contexts/StudioContext";
 import { StudioStepper } from "./StudioStepper";
 import { StudioHelpPanel } from "./StudioHelpPanel";
@@ -28,9 +29,20 @@ export function StudioLayout() {
         <StudioStepper />
       </aside>
 
-      {/* Center panel — step content */}
+      {/* Center panel — step content with animated transitions */}
       <main className="flex-1 overflow-y-auto bg-ds-bg-primary">
-        <StepContent />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={state.currentStep}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -24 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="h-full"
+          >
+            <StepContent />
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Right panel — contextual help */}
