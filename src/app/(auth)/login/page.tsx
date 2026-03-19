@@ -16,25 +16,43 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [signupConfirm, setSignupConfirm] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    const { error } =
-      mode === "signin"
-        ? await signIn(email, password)
-        : await signUp(email, password);
-
-    setLoading(false);
-
-    if (error) {
-      setError(error);
+    if (mode === "signin") {
+      const { error } = await signIn(email, password);
+      setLoading(false);
+      if (error) {
+        setError(error);
+      } else {
+        router.push("/generate");
+      }
     } else {
-      router.push("/generate");
+      const { error } = await signUp(email, password);
+      setLoading(false);
+      if (error) {
+        setError(error);
+      } else {
+        setSignupConfirm(true);
+      }
     }
   };
+
+  if (signupConfirm) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-ds-bg-primary">
+        <div className="w-full max-w-sm px-6 text-center">
+          <p className="text-ds-text-primary text-base">
+            Account created! Check your email to confirm before signing in.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-ds-bg-primary">

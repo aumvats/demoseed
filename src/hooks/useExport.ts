@@ -54,12 +54,20 @@ export function useExport() {
       const history = getHistory();
       if (history.length > 0) {
         history[0].exportedFormat = format;
-        localStorage.setItem("demoseed:generation-history", JSON.stringify(history));
+        try {
+          localStorage.setItem("demoseed:generation-history", JSON.stringify(history));
+        } catch {
+          // Storage may be unavailable (e.g. private browsing quota exceeded)
+        }
       }
 
       if (isFirstExport.current) {
         isFirstExport.current = false;
-        localStorage.setItem(FIRST_EXPORT_KEY, "true");
+        try {
+          localStorage.setItem(FIRST_EXPORT_KEY, "true");
+        } catch {
+          // Storage may be unavailable
+        }
 
         confetti({
           particleCount: 120,
